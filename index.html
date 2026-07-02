@@ -600,7 +600,8 @@
       </div>
       <div class="enquiry-form">
         <h3>Room Enquiry Form</h3>
-        <form id="bookingForm">
+        <form id="bookingForm"><input type="text" name="website" style="display:none;" tabindex="-1" autocomplete="off">
+<input type="hidden" id="formTime" value="">
           <div class="form-row">
             <div class="form-group">
               <label for="name">Naam</label>
@@ -685,8 +686,15 @@
   });
 
   // Form submit -> opens WhatsApp prefilled message as fallback (no backend available)
-  document.getElementById('bookingForm').addEventListener('submit', function(e){
-    e.preventDefault();
+  document.getElementById('formTime').value = Date.now();
+document.getElementById('bookingForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const honeypot = this.querySelector('input[name="website"]').value;
+  const timeDiff = Date.now() - parseInt(document.getElementById('formTime').value);
+  if(honeypot || timeDiff < 3000){
+    alert('Spam detected! Please try again.');
+    return;
+  }
     const name = document.getElementById('name').value;
     const phone = document.getElementById('phone').value;
     const checkin = document.getElementById('checkin').value;
